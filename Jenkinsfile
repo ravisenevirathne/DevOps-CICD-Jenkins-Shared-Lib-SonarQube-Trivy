@@ -1,3 +1,5 @@
+@Library('my-shared-library') _
+
 pipeline{
     agent any
 
@@ -5,7 +7,11 @@ pipeline{
         stage('Git Checkout'){
             steps{
                 script{
-                    git 'https://github.com/ravisenevirathne/DevOps-CICD-Jenkins-Shared-Lib-SonarQube-Trivy.git'
+                    gitCheckout(
+                        branch: "master"
+                        url: "https://github.com/ravisenevirathne/DevOps-CICD-Jenkins-Shared-Lib-SonarQube-Trivy.git"
+                    )
+                    // git 'https://github.com/ravisenevirathne/DevOps-CICD-Jenkins-Shared-Lib-SonarQube-Trivy.git'
                 }
             }
         }
