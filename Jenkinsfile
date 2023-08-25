@@ -3,6 +3,10 @@
 pipeline{
     agent any
 
+    parameters{
+        choice(name: 'action', choices: 'create\ndelete', description: 'Choose create/destroy')
+    }
+
     stages{
         stage('Git Checkout'){
             steps{
@@ -20,6 +24,14 @@ pipeline{
             steps{
                 script{
                     mvnTest()
+                }
+            }      
+        }
+
+        stage('Integration Test maven'){
+            steps{
+                script{
+                    mvnIntegrationTest()
                 }
             }      
         }
