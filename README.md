@@ -1,6 +1,6 @@
 # DevOps CICD Jenkins Pipeline using Jenkins-Shared-Lib with SonarQube and Trivy scanning
 
-![Alt text](image.png)
+<img src = "images/image.png">
 
 ### Steps
 
@@ -56,19 +56,19 @@ sudo apt-get install trivy
 ```
 
 Install these Jenkins Plugins
-![Alt text](image-2.png)
+<img src = "images/image-2.png">
 
 Set Sonar and DockerHub Credentials
-![Alt text](image-1.png)
+![Alt text](images/image-1.png)
 
 Add SonarQube Server to Jenkins
-![Alt text](image-3.png)
+![Alt text](images/image-3.png)
 
 Setup the Shared Library Repository
-![Alt text](image-4.png)
+![Alt text](images/image-4.png)
 
 On SonarQube (IP:9000) create the token for Jenkins
-![Alt text](image-5.png)
+![Alt text](images/image-5.png)
 
 On SonarQube (IP:9000) create the webhook for Jenkins
-![Alt text](image-6.png)
+![Alt text](images/image-6.png)
