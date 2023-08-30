@@ -129,7 +129,7 @@ pipeline{
                       sh """
                           terraform init 
                           terraform -version
-                          terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_KEY_ID' -var 'region=us-east-1' --var-file=terraform.tfvars
+                          terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_KEY_ID' --var-file=terraform.tfvars
                       """
                   }
                 }
