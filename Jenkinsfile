@@ -10,11 +10,7 @@ pipeline{
         string(name: 'DockerHubUser', description: "name of the Application", defaultValue: 'ravisenevirathne')
     }
 
-    environment{
-
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_KEY_ID = credentials('AWS_SECRET_KEY_ID')
-    }
+    
 
     stages{
 
@@ -121,6 +117,11 @@ pipeline{
 
         stage('Create EKS Cluster : Terraform'){
             when { expression {  params.action == 'create' } }
+            environment{
+
+                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+                AWS_SECRET_KEY_ID = credentials('AWS_SECRET_KEY_ID')
+                }
             steps{
                 script{
 
