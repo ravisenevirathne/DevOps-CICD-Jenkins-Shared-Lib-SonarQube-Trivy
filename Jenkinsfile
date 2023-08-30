@@ -126,7 +126,7 @@ pipeline{
 
                     dir('eks_terraform') {
                 
-                        sh "terraform init"
+                        sh "terraform init -upgrade"
                         sh "terraform -version"
                         sh "aws s3 ls"
                         //sh "terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=terraform.tfvars"
