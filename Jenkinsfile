@@ -126,10 +126,8 @@ pipeline{
 
                     dir('eks_terraform') {
                       sh """
-                          
                           terraform init 
-                          terraform plan
-                
+                          terraform -version
                       """
                   }
                 }
