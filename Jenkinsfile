@@ -118,7 +118,6 @@ pipeline{
         stage('Create EKS Cluster : Terraform'){
             when { expression {  params.action == 'create' } }
             environment{
-
                 AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
                 AWS_SECRET_KEY_ID = credentials('AWS_SECRET_KEY_ID')
                 }
@@ -126,11 +125,11 @@ pipeline{
                 script{
 
                     dir('eks_terraform') {
-                      sh """
-                          terraform init 
-                          terraform -version
-                          terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_KEY_ID' --var-file=terraform.tfvars
-                      """
+                
+                        sh  "terraform init"
+                        sh  "terraform -version"
+                        // sh "terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_KEY_ID' --var-file=terraform.tfvars
+                        sh "terraform plan"
                   }
                 }
             }
