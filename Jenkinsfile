@@ -128,7 +128,7 @@ pipeline{
                       sh """
                           
                           terraform init 
-                          terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var --var-file=terraform.tfvars
+                          terraform plan
                 
                       """
                   }
