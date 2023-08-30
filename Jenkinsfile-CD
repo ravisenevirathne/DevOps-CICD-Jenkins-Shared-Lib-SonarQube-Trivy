@@ -85,7 +85,7 @@ pipeline{
             }
         }   
 
-        stage('Create EKS Cluster : Terraform'){
+        stage('Delete EKS Cluster : Terraform'){
             when { expression {  params.action == 'delete' } }
             environment{
                 AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
