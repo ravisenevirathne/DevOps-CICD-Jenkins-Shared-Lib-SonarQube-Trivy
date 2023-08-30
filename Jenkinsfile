@@ -129,7 +129,7 @@ pipeline{
                         sh  "terraform init"
                         sh  "terraform -version"
                         // sh "terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_KEY_ID' --var-file=terraform.tfvars
-                        sh "aws s3 ls"
+                        sh "terraform plan --var-file=terraform.tfvars"
                   }
                 }
             }
