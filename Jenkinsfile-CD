@@ -5,7 +5,7 @@ pipeline{
 
     parameters{
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose create/destroy')
-
+        string(name: 'cluster', description: "name of the EKS Cluster", defaultValue: 'demo-cluster')
     }
 
     stages{
@@ -40,6 +40,64 @@ pipeline{
                         sh "terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=./config/terraform.tfvars"
                         sh "terraform apply -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=./config/terraform.tfvars --auto-approve"
                         //sh "terraform plan"
+                  }
+                }
+            }
+        }
+
+        stage('Connect to EKS '){
+            when { expression {  params.action == 'create' } }
+        steps{
+
+            script{
+
+                sh """
+                aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+                aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+                aws configure set region "${params.Region}"
+                aws eks --region ${params.Region} update-kubeconfig --name ${params.cluster}
+                """
+            }
+        }
+        } 
+
+        stage('Deployment on EKS Cluster'){
+            when { expression {  params.action == 'create' } }
+        steps{
+                script{
+                  
+                  def apply = false
+
+                  try{
+                    input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
+                    apply = true
+                  }catch(err){
+                    apply= false
+                    currentBuild.result  = 'UNSTABLE'
+                  }
+                  if(apply){
+
+                    sh """
+                      kubectl apply -f deployment.yaml
+                    """
+                  }
+                }
+            }
+        }   
+
+        stage('Create EKS Cluster : Terraform'){
+            when { expression {  params.action == 'delete' } }
+            environment{
+                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY_ID')
+                }
+            steps{
+                script{
+
+                    dir('eks_module') {
+
+                        sh "terraform status -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=./config/terraform.tfvars"
+                        sh "terraform destroy -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=./config/terraform.tfvars --auto-approve"
                   }
                 }
             }
