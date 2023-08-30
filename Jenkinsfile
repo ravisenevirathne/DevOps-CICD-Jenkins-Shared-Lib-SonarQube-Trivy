@@ -128,6 +128,7 @@ pipeline{
                       sh """
                           terraform init 
                           terraform -version
+                          terraform plan --var-file=terraform.tfvars
                       """
                   }
                 }
