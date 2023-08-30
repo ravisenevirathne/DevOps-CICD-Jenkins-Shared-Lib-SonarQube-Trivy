@@ -12,8 +12,8 @@ pipeline{
 
     environment{
 
-        AWS_ACCESS_KEY_IDACCESS_KEY = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_KEY_IDSECRET_KEY = credentials('AWS_SECRET_KEY_ID')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_KEY_ID = credentials('AWS_SECRET_KEY_ID')
     }
 
     stages{
@@ -128,7 +128,7 @@ pipeline{
                       sh """
                           terraform init 
                           terraform -version
-                          terraform plan
+                          terraform plan -var 'region=us-east-1' --var-file=terraform.tfvars
                       """
                   }
                 }
