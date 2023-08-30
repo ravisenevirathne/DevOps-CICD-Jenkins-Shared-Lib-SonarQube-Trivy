@@ -5,9 +5,7 @@ pipeline{
 
     parameters{
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose create/destroy')
-        string(name: 'ImageName', description: "name of the docker build", defaultValue: 'java-springboot-demo')
-        string(name: 'ImageTag', description: "tag of the docker build", defaultValue: 'v1')
-        string(name: 'DockerHubUser', description: "name of the Application", defaultValue: 'ravisenevirathne')
+
     }
 
     stages{
@@ -20,7 +18,7 @@ pipeline{
                         branch: "master",
                         url: "https://github.com/ravisenevirathne/DevOps-CICD-Jenkins-Shared-Lib-SonarQube-Trivy.git"
                     )
-                    // git 'https://github.com/ravisenevirathne/DevOps-CICD-Jenkins-Shared-Lib-SonarQube-Trivy.git'
+                   
                 }
             }
         }
@@ -40,6 +38,7 @@ pipeline{
                         sh "terraform -version"
                         sh "aws s3 ls"
                         sh "terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=./config/terraform.tfvars"
+                        sh "terraform plan -var 'access_key=$AWS_ACCESS_KEY_ID' -var 'secret_key=$AWS_SECRET_ACCESS_KEY' --var-file=./config/terraform.tfvars --auto-approve"
                         //sh "terraform plan"
                   }
                 }
