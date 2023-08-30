@@ -10,6 +10,12 @@ pipeline{
         string(name: 'DockerHubUser', description: "name of the Application", defaultValue: 'ravisenevirathne')
     }
 
+    environment{
+
+        ACCESS_KEY = credentials('AWS_ACCESS_KEY_ID')
+        SECRET_KEY = credentials('AWS_SECRET_KEY_ID')
+    }
+
     stages{
 
         stage('Git Checkout'){
@@ -25,91 +31,108 @@ pipeline{
             }
         }
 
-        stage('Unit Test maven'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
-                    mvnTest()
-                }
-            }      
-        }
+        // stage('Unit Test maven'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+        //             mvnTest()
+        //         }
+        //     }      
+        // }
 
-        stage('Integration Test maven'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
-                    mvnIntegrationTest()
-                }
-            }      
-        }
+        // stage('Integration Test maven'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+        //             mvnIntegrationTest()
+        //         }
+        //     }      
+        // }
 
-        stage('Static Code Analysis: Sonarqube'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
-                    def SonarQubecredentialsId= 'sonar-api'
-                    staticCodeAnalysis(SonarQubecredentialsId)
-                }
-            }      
-        }
+        // stage('Static Code Analysis: Sonarqube'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+        //             def SonarQubecredentialsId= 'sonar-api'
+        //             staticCodeAnalysis(SonarQubecredentialsId)
+        //         }
+        //     }      
+        // }
 
-        stage('Quality Gate Status: Sonarqube'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
-                    def SonarQubecredentialsId= 'sonar-api'
-                    qualityGateStatus(SonarQubecredentialsId)
-                }
-            }      
-        }
+        // stage('Quality Gate Status: Sonarqube'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+        //             def SonarQubecredentialsId= 'sonar-api'
+        //             qualityGateStatus(SonarQubecredentialsId)
+        //         }
+        //     }      
+        // }
 
-        stage('Maven Build'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
+        // stage('Maven Build'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
 
-                    mvnBuild()
-                }
-            }      
-        }
+        //             mvnBuild()
+        //         }
+        //     }      
+        // }
 
-        stage('Docker Build'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
+        // stage('Docker Build'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
                     
-                    dockerBuild("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+        //             dockerBuild("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+        //         }
+        //     }      
+        // }
+
+        // stage('Docker Image Scan: trivy'){
+        //  when { expression {  params.action == 'create' } }
+        //     steps{
+        //        script{
+                   
+        //            dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+        //        }
+        //     }
+        // }
+
+        // stage('Docker Image Push'){
+        //  when { expression {  params.action == 'create' } }
+        //     steps{
+        //        script{
+                   
+        //            dockerImagePush("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+        //        }
+        //     }
+        // }
+
+        // stage('Docker Image Cleanup'){
+        //  when { expression {  params.action == 'create' } }
+        //     steps{
+        //        script{
+                   
+        //            dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
+        //        }
+        //     }
+        // }
+
+        stage('Create EKS Cluster : Terraform'){
+            when { expression {  params.action == 'create' } }
+            steps{
+                script{
+
+                    dir('eks_terraform') {
+                      sh """
+                          
+                          terraform init 
+                          terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var --var-file=terraform.tfvars
+                
+                      """
+                  }
                 }
-            }      
-        }
-
-        stage('Docker Image Scan: trivy'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   
-                   dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }
-
-        stage('Docker Image Push'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   
-                   dockerImagePush("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }
-
-        stage('Docker Image Cleanup'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   
-                   dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
             }
         }
 
