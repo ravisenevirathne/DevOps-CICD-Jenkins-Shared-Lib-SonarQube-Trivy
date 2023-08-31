@@ -65,7 +65,8 @@ pipeline{
                 aws configure set region "${params.region}"
                 aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                 """
-                sh "aws Login successful"
+                sh "$AWS_ACCESS_KEY_ID"
+                sh "$AWS_SECRET_ACCESS_KEY"
             }
         }
         } 
