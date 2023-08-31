@@ -60,8 +60,8 @@ pipeline{
         steps{
             script{
                 sh """
-                aws configure set access_key "$AWS_ACCESS_KEY_ID"
-                aws configure set access_key "$AWS_SECRET_ACCESS_KEY"
+                aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+                aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
                 aws configure set region "${params.Region}"
                 aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                 """
@@ -77,21 +77,21 @@ pipeline{
 
                     sh "Inside Deloyment on EKS cluster stage"
                   
-                //   def apply = false
+                  def apply = false
 
-                //   try{
-                //     input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
-                //     apply = true
-                //   }catch(err){
-                //     apply= false
-                //     currentBuild.result  = 'UNSTABLE'
-                //   }
-                //   if(apply){
+                  try{
+                    input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
+                    apply = true
+                  }catch(err){
+                    apply= false
+                    currentBuild.result  = 'UNSTABLE'
+                  }
+                  if(apply){
 
-                //     sh """
-                //       kubectl apply -f deployment.yaml
-                //     """
-                //   }
+                    sh """
+                      kubectl apply -f deployment.yaml
+                    """
+                  }
                 }
             }
         }   
