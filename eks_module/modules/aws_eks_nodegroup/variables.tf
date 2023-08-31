@@ -1,5 +1,5 @@
 variable "eks_cluster_name" {
-  
+  default  =  "demo-cluster1"
 }
 variable "node_group_name" {
   default = "nodes-general"
