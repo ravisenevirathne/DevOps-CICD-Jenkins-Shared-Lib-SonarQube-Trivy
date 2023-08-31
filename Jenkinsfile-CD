@@ -78,7 +78,7 @@ pipeline{
         steps{
                 script{
 
-                    sh "Inside Deloyment on EKS cluster stage"
+                    
                   
                   def apply = false
 
