@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: java-springboot
-        image: ravisenevirathne/java-springboot-demo:latest
+        #image: ravisenevirathne/java-springboot-demo:latest
+        image: nginx
         ports:
         - containerPort: 8080
 
