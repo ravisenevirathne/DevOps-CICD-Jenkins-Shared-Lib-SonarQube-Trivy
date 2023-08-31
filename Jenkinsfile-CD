@@ -47,16 +47,18 @@ pipeline{
 
         stage('Connect to EKS '){
             when { expression {  params.action == 'create' } }
+        environment{
+                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY_ID')
+        }
         steps{
             script{
-                // sh """
-                // aws configure set access_key "$AWS_ACCESS_KEY_ID"
-                // aws configure set access_key "$AWS_SECRET_ACCESS_KEY"
-                // aws configure set region "${params.Region}"
-                // aws eks --region ${params.Region} update-kubeconfig --name ${params.cluster}
-                // """
-                sh "$AWS_ACCESS_KEY_ID"
-                sh "$AWS_SECRET_ACCESS_KEY"
+                sh """
+                aws configure set access_key "$AWS_ACCESS_KEY_ID"
+                aws configure set access_key "$AWS_SECRET_ACCESS_KEY"
+                aws configure set region "${params.Region}"
+                aws eks --region ${params.Region} update-kubeconfig --name ${params.cluster}
+                """
                 sh "aws Login successful"
             }
         }
