@@ -1,7 +1,9 @@
 # DevOps CICD Jenkins Pipeline using Jenkins-Shared-Lib with SonarQube and Trivy scanning
+![Alt text](images/image-jobs.png)
 
 ![Alt text](images/image.png)
 
+![Alt text](images/image-cd.png)
 
 ### Steps
 
